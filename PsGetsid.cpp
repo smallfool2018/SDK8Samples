@@ -1,4 +1,4 @@
-// PsGetsid.cpp : ¶¨Òå¿ØÖÆÌ¨Ó¦ÓÃ³ÌÐòµÄÈë¿Úµã¡£
+// PsGetsid.cpp : å®šä¹‰æŽ§åˆ¶å°åº”ç”¨ç¨‹åºçš„å…¥å£ç‚¹ã€‚
 //
 
 #include "stdafx.h"
@@ -13,45 +13,44 @@ extern BOOL ShowLicenseDialog(LPCSTR lpszName, int argc, char** argv);
 
 
 
-size_t __declspec(naked) Test_PE_CopyStringW(WCHAR* pszTarget, LPCWSTR lpszSource)
-{
-	__asm
-	{
-		push ebp 
-		mov  ebp, esp
-		mov  ecx, lpszSource
-		mov  edx, ecx
-		push esi
-		lea  esi, [edx+2]
-		lea  esp, [esp+0]
-__loop1: 
-		mov  ax,  [edx]
-		add  edx, 2
-		test ax, ax
-		jnz  __loop1 
-		sub  edx, esi 
-		mov  esi, pszTarget
-		sar  edx, 1
-		sub  esi, ecx
-		lea  eax, [edx+1]
-		jmp  __loop2
-__loop2:
-		movzx edx, word ptr[ecx]
-		lea   ecx, [ecx+2]
-		mov   [esi+ecx-2],dx 
-		test  dx, dx 
-		jnz   __loop2
-		pop esi 
-		pop ebp
-		retn 
-	}
-}
+////size_t __declspec(naked) Test_PE_CopyStringW(WCHAR* pszTarget, LPCWSTR lpszSource)
+////{
+////	__asm
+////	{
+////		push ebp 
+////		mov  ebp, esp
+////		mov  ecx, lpszSource
+////		mov  edx, ecx
+////		push esi
+////		lea  esi, [edx+2]
+////		lea  esp, [esp+0]
+////__loop1: 
+////		mov  ax,  [edx]
+////		add  edx, 2
+////		test ax, ax
+////		jnz  __loop1 
+////		sub  edx, esi 
+////		mov  esi, pszTarget
+////		sar  edx, 1
+////		sub  esi, ecx
+////		lea  eax, [edx+1]
+////		jmp  __loop2
+////__loop2:
+////		movzx edx, word ptr[ecx]
+////		lea   ecx, [ecx+2]
+////		mov   [esi+ecx-2],dx 
+////		test  dx, dx 
+////		jnz   __loop2
+////		pop esi 
+////		pop ebp
+////		retn 
+////	}
+////}
 
 extern DWORD gdwCmdLineCount;
 extern CHAR gszAccountName[];
 extern CHAR gszUserName[];
 extern CHAR gszListNameInFile[];
-////CHAR gszListNameInFile[_MAX_PATH] = { 0 };
 extern CHAR gszPassword[];
 extern CHAR gszFullPathName[];
 extern CHAR gszComputerName[];
@@ -65,6 +64,7 @@ extern long GetLocalDomainSIDString(LPSTR pszDomainName);
 
 int main(int argc, const char **argv)
 {
+///#ifdef __DBGONLY
 	////CHAR szHostName[_MAX_PATH] = { 0 };
 	////GetLocalDomainSIDString(szHostName);
 	////printf_s("%s\n",szHostName);
@@ -82,6 +82,7 @@ int main(int argc, const char **argv)
 	////CopyMemory(&inaddr, (void*)pInfo->h_addr_list, pInfo->h_length);
 	////const char* pszAddr = inet_ntoa(inaddr);
 	////strcpy_s(szAddr, pszAddr);
+///#endif 
 
 	CHAR szFileName[_MAX_PATH] = { 0 };
 	AcceptLicense(argc, (char**)argv);
@@ -128,11 +129,11 @@ int main(int argc, const char **argv)
 			gszPassword[index] = 0;
 			printf_s("\n");
 		}
-
-#if 1/*_DBGONLY*/
-
-		wsprintfA(gszListNameInFile + 1,"%s", ",SMALLFOOL-PC,SMALLFOOL-PC");
-#endif 
+////
+////#if 1/*_DBGONLY*/
+////
+////		wsprintfA(gszListNameInFile + 1,"%s", ",SMALLFOOL-PC,SMALLFOOL-PC");
+////#endif 
 
 		return Run(true, gszListNameInFile + 1, ConnectServerCallback);
 	}
@@ -143,4 +144,6 @@ int main(int argc, const char **argv)
 	}
     return 0;
 }
+
+
 
